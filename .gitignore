@@ -1,0 +1,8 @@
+data_csv/*
+data_full/*
+data_pkl/*
+deprecated/*
+*.gml
+*.csv
+*.pkl
+.idea/*
