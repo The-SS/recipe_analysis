@@ -45,10 +45,31 @@ The `process_data.py` script provides:
 The filtered data is saved to the same directory.
 The script can be executed without any modifications.
 
+
+The `process_data2.py` script provides:
+1. some examples of reading and compiling some results
+2. some data processing and filtering for the data to build a graph.
+3. saving of data for specific countries with a large enough number of recipes.
+
+The full filtered data is saved to the same directory.
+The country data is saved to the `country_data` directory.
+The script can be executed without any modifications.
+
 ## Building the graphs
-The `construct_graphs.py` scripts are used to build two graphs:
+The `construct_graphs.py` script is used to build two graphs:
 1. An unweighted undirected graph between recipes and ingredients
 2. A weighted undirected graph between recipes and nutrients.
 
 Two `.gml` files are saved to the same directory.
 The script can be executed without any modifications
+
+The `construct_graphs2.py` is similar to `construct_graphs.py` but is better structured.
+The script is used to build two graphs:
+1. An unweighted undirected graph between recipes and ingredients
+2. A weighted undirected graph between recipes and nutrients.
+
+Two `.gml` files are saved to the same directory.
+The script can be executed without any modifications
+
+
+## Processing the graphs
