@@ -61,7 +61,7 @@ The `construct_graphs.py` script is used to build two graphs:
 2. A weighted undirected graph between recipes and nutrients.
 
 Two `.gml` files are saved to the same directory.
-The script can be executed without any modifications
+The script can be executed without any modifications.
 
 The `construct_graphs2.py` is similar to `construct_graphs.py` but is better structured.
 The script is used to build two graphs:
@@ -69,7 +69,17 @@ The script is used to build two graphs:
 2. A weighted undirected graph between recipes and nutrients.
 
 Two `.gml` files are saved to the same directory.
-The script can be executed without any modifications
+The script can be executed without any modifications.
 
 
 ## Processing the graphs
+The `ingredients_graph_processing.py` script processes the graph by 
+1. Removing recipes with a small number of ingredients
+2. Removing ingredients that are only used a few number of times (and those that have a name less than 2 characters long)
+3. Creating a bipartite graph for the remaining recipes and ingredients
+4. Creating the 1-mode projections onto the recipes and ingredients
+
+After that, the script prints out some data (number of nodes/edges before/after the removal of nodes, top ingredients, ...)
+
+The script does not save anything. 
+The script can be executed without any modifications.

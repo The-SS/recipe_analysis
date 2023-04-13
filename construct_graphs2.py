@@ -96,7 +96,22 @@ def build_graphs(df, path=''):
 def main():
     # read the data pkl file
     # df = pd.read_pickle('RDB_full_data_filtered.pkl')
+    # file_name = 'RDB_full_data_filtered'
+    file_name = 'country_data/Argentine'
+    file_name = 'country_data/Australian'
+    file_name = 'country_data/Canadian'
+    file_name = 'country_data/Chinese'
+    file_name = 'country_data/English'
+    file_name = 'country_data/French'
     file_name = 'country_data/German'
+    file_name = 'country_data/Greek'
+    file_name = 'country_data/Indian'
+    file_name = 'country_data/Irish'
+    file_name = 'country_data/Italian'
+    file_name = 'country_data/Mexican'
+    file_name = 'country_data/Nigerian'
+    file_name = 'country_data/Thai'
+    file_name = 'country_data/US'
     df = pd.read_pickle(file_name + '.pkl')
     build_graphs(df, path=file_name)
 
