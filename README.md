@@ -38,14 +38,6 @@ This will merge all dataframes into one and remove URLs that could not be reache
 The resulting dataframe is saved in the current directory.
 
 ## Processing the data
-The `process_data.py` script provides:
-1. some examples of reading and compiling some results
-2. some data processing and filtering for the data to build a graph.
-
-The filtered data is saved to the same directory.
-The script can be executed without any modifications.
-
-
 The `process_data2.py` script provides:
 1. some examples of reading and compiling some results
 2. some data processing and filtering for the data to build a graph.
@@ -57,14 +49,6 @@ The script can be executed without any modifications.
 
 ## Building the graphs
 The `construct_graphs.py` script is used to build two graphs:
-1. An unweighted undirected graph between recipes and ingredients
-2. A weighted undirected graph between recipes and nutrients.
-
-Two `.gml` files are saved to the same directory.
-The script can be executed without any modifications.
-
-The `construct_graphs2.py` is similar to `construct_graphs.py` but is better structured.
-The script is used to build two graphs:
 1. An unweighted undirected graph between recipes and ingredients
 2. A weighted undirected graph between recipes and nutrients.
 
