@@ -38,13 +38,15 @@ This will merge all dataframes into one and remove URLs that could not be reache
 The resulting dataframe is saved in the current directory.
 
 ## Processing the data
-The `process_data2.py` script provides:
+The `process_data.py` script provides:
 1. some examples of reading and compiling some results
 2. some data processing and filtering for the data to build a graph.
-3. saving of data for specific countries with a large enough number of recipes.
+3. saving of data for specific locations with a large enough number of recipes.
 
 The full filtered data is saved to the same directory.
 The country data is saved to the `country_data` directory.
+The region data is saved to the `region_data` directory.
+The continent data is saved to the `continent_data` directory.
 The script can be executed without any modifications.
 
 ## Building the graphs
@@ -63,7 +65,7 @@ The `ingredients_graph_processing.py` script processes the graph by
 3. Creating a bipartite graph for the remaining recipes and ingredients
 4. Creating the 1-mode projections onto the recipes and ingredients
 
-After that, the script prints out some data (number of nodes/edges before/after the removal of nodes, top ingredients, ...)
+The script prints out some data (number of nodes/edges before/after the removal of nodes).
 
-The script does not save anything. 
-The script can be executed without any modifications.
+The script saves three `.gml` files: one for the reduced graph, one for the projection on ingredients, and one for the projection on the recipes. 
+Simply update the list of locations and run the script.

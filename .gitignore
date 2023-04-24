@@ -6,3 +6,6 @@ deprecated/*
 *.csv
 *.pkl
 .idea/*
+*.zip
+test.py
+figures/*

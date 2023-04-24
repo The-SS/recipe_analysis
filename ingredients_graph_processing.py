@@ -2,8 +2,13 @@ import networkx as nx
 import numpy as np
 from copy import deepcopy
 import matplotlib.pyplot as plt
+from tqdm import tqdm
+import os
 
 
+# ########################## #
+# Graph processing functions #
+# ########################## #
 def remove_degree_zero_nodes(G):
     to_remove = [node for node in G.nodes if G.degree[node] == 0]
     G.remove_nodes_from(to_remove)
@@ -36,7 +41,12 @@ def get_ingredients_with_low_degree(G, dmin):
     return to_remove
 
 
-def remove_recipes_and_ingredients_with_small_degree(G, dmin_r=1, dmin_i=1):
+def remove_recipes_and_ingredients_with_small_degree(G, dmin_r=1, dmin_i=1, verbose=False):
+    if verbose:
+        print('Before processing: ')
+        print('Number of nodes: ', G.number_of_nodes())
+        print('Number of edges: ', G.number_of_edges())
+
     to_remove_recipes = get_recipes_with_low_degree(G, dmin_r)
     G.remove_nodes_from(to_remove_recipes)
 
@@ -44,6 +54,11 @@ def remove_recipes_and_ingredients_with_small_degree(G, dmin_r=1, dmin_i=1):
     G.remove_nodes_from(to_remove)
 
     G = remove_degree_zero_nodes(G)
+
+    if verbose:
+        print('Post Processing:')
+        print('Number of nodes: ', G.number_of_nodes())
+        print('Number of edges: ', G.number_of_edges())
 
     return G
 
@@ -69,56 +84,104 @@ def project_on_recipes(G):
     return recipe_projection, ingredients_projection
 
 
+# ####################### #
+# Load and Save functions #
+# ####################### #
+def load_graph(loc, loc_type, reduced=False):
+    """
+    Loads a single graph. Supports normal graph and reduced versions
+    """
+    loc += '_ingredients'
+    if reduced:
+        loc += '_reduced'
+    filename = os.path.join(loc_type, loc)
+    return nx.read_gml(filename + '.gml')
+
+
+def load_graphs_list(loc_list, loc_type, reduced=False):
+    """
+    Loads a list of graphs
+    """
+    loc_graphs = []
+    for loc in tqdm(loc_list, total=len(loc_list), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+        loc_graphs.append(load_graph(loc, loc_type, reduced))
+    return loc_graphs
+
+
+def save_graph(loc, loc_type, graph, graph_type=''):
+    """
+    Save a single graph
+    """
+    loc += '_ingredients'
+    filename = os.path.join(loc_type, loc)
+    nx.write_gml(graph, filename + graph_type + '.gml')
+
+
+def save_reduced_graphs(loc_list, loc_type, loc_graphs):
+    """
+    Save a list of graphs
+    """
+    for loc, G in zip(loc_list, loc_graphs):
+        save_graph(loc, loc_type, G, graph_type='_reduced')
+
+
+# ############################# #
+# Functions that do many things #
+# ############################# #
+def load_reduce_save(loc, loc_type, dmin_r=1, dmin_i=1, verbose=False, save=True):
+    graph = load_graph(loc, loc_type)
+    graph = remove_recipes_and_ingredients_with_small_degree(graph, dmin_r, dmin_i, verbose)
+    if save:
+        save_graph(loc, loc_type, graph, graph_type='_reduced')
+    return graph
+
+
+def load_reduced_project_save(loc, loc_type, save=True):
+    graph = load_graph(loc, loc_type, reduced=True)
+    recipe_graph, ingredients_graph = project_on_recipes(graph)
+    if save:
+        save_graph(loc, loc_type, recipe_graph, graph_type='_reduced_ingProjR')
+        save_graph(loc, loc_type, ingredients_graph, graph_type='_reduced_ingProjI')
+
+
+# #################################################################################################################### #
+# MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN #
+# #################################################################################################################### #
 def main():
-    ig = nx.read_gml('country_data/Argentine_ingredients.gml')
-    ig = nx.read_gml('country_data/Australian_ingredients.gml')
-    ig = nx.read_gml('country_data/Canadian_ingredients.gml')
-    ig = nx.read_gml('country_data/Chinese_ingredients.gml')
-    ig = nx.read_gml('country_data/English_ingredients.gml')
-    ig = nx.read_gml('country_data/French_ingredients.gml')
-    ig = nx.read_gml('country_data/German_ingredients.gml')
-    # ig = nx.read_gml('country_data/Greek_ingredients.gml')
-    # ig = nx.read_gml('country_data/Indian_ingredients.gml')
-    # ig = nx.read_gml('country_data/Italian_ingredients.gml')
-    # ig = nx.read_gml('country_data/Irish_ingredients.gml')
-    # ig = nx.read_gml('country_data/Mexican_ingredients.gml')
-    # ig = nx.read_gml('country_data/Nigerian_ingredients.gml')
-    # ig = nx.read_gml('country_data/Thai_ingredients.gml')
-    # ig = nx.read_gml('country_data/US_ingredients.gml')
+    countries = ['Argentine', 'Australian', 'Canadian', 'Chinese',
+                 'English', 'French', 'German', 'Greek',
+                 'Indian', 'Irish', 'Italian',
+                 'Mexican', 'Nigerian', 'Thai', 'US']
+    regions = ['Australian', 'Canadian', 'Chinese and Mongolian',
+               'French', 'Indian Subcontinent', 'Italian',
+               'Mexican', 'South American', 'US']
+    continents = ['Asian', 'European', 'Latin American', 'North American']
 
-    print('Number of nodes: ', ig.number_of_nodes())
-    print('Number of edges: ', ig.number_of_edges())
-    ig = remove_recipes_and_ingredients_with_small_degree(ig, dmin_r=5, dmin_i=3)
-    print('Post Processing:')
-    print('Number of nodes: ', ig.number_of_nodes())
-    print('Number of edges: ', ig.number_of_edges())
-    # nx.draw_networkx(ig)
-    # plt.show()
+    for loc in tqdm(countries, total=len(countries), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+        if loc in ['Italian', 'Mexican']:
+            dmin_r, dmin_i = 5, 25
+        else:
+            dmin_r, dmin_i = 5, 3
+        load_reduce_save(loc, 'country_data', dmin_r, dmin_i, verbose=True, save=True)
+    for loc in tqdm(regions, total=len(regions), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+        if loc in ['Italian', 'Mexican']:
+            dmin_r, dmin_i = 5, 40
+        else:
+            dmin_r, dmin_i = 5, 7
+        load_reduce_save(loc, 'region_data', dmin_r, dmin_i, verbose=True, save=True)
+    for loc in tqdm(continents, total=len(continents), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+        if loc == 'North American':
+            dmin_r, dmin_i = 10, 40
+        else:
+            dmin_r, dmin_i = 10, 70
+        load_reduce_save(loc, 'continent_data', dmin_r, dmin_i, verbose=True, save=True)
 
-    recipe_graph, ingredients_graph = project_on_recipes(ig)
-
-    degree_sequence = sorted([d for n, d in ingredients_graph.degree()], reverse=True)
-    degree_hist = nx.degree_histogram(ingredients_graph)
-    plt.bar(range(len(degree_hist)), degree_hist)
-    plt.xlabel("Degree")
-    plt.ylabel("Frequency")
-    plt.title("Degree Distribution")
-    plt.show()
-
-    # get node with highest degree
-    degree_dict = dict(ingredients_graph.degree())
-    node, degree = max(degree_dict.items(), key=lambda x: x[1])
-    print(f"Node {node} has the highest degree of {degree}")
-    print('This corresponds to: ', ig.nodes[node]['title'])
-
-    k = 10
-    degree_dict = dict(ingredients_graph.degree())
-    top_k_nodes = [key for key, value in sorted(degree_dict.items(), key=lambda x: x[1], reverse=True)[:k]]
-    print(f"The top {k} nodes with the highest degree are: {top_k_nodes}")
-    for node in top_k_nodes:
-        print('This corresponds to: ', ig.nodes[node]['title'])
-
-    print('Done')
+    for loc in tqdm(countries, total=len(countries), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+        load_reduced_project_save(loc, 'country_data', save=True)
+    for loc in tqdm(regions, total=len(regions), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+        load_reduced_project_save(loc, 'region_data', save=True)
+    for loc in tqdm(continents, total=len(continents), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+        load_reduced_project_save(loc, 'continent_data', save=True)
 
 
 if __name__ == "__main__":
