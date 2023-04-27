@@ -47,18 +47,20 @@ The full filtered data is saved to the same directory.
 The country data is saved to the `country_data` directory.
 The region data is saved to the `region_data` directory.
 The continent data is saved to the `continent_data` directory.
+The world data is saved to the root directory.
 The script can be executed without any modifications.
 
 ## Building the graphs
 The `construct_graphs.py` script is used to build two graphs:
-1. An unweighted undirected graph between recipes and ingredients
-2. A weighted undirected graph between recipes and nutrients.
+1. An unweighted undirected graph between recipes and ingredients with `_ingredients` appended to the original file name.
+2. A weighted undirected graph between recipes and nutrients (normalized by energy) with `_nutrients` appended to the original file name.
 
-Two `.gml` files are saved to the same directory.
+Two `.gml` files are saved to the same directory where the `.pkl` file resides.
 The script can be executed without any modifications.
 
 
 ## Processing the graphs
+### Ingredients Graphs
 The `ingredients_graph_processing.py` script processes the graph by 
 1. Removing recipes with a small number of ingredients
 2. Removing ingredients that are only used a few number of times (and those that have a name less than 2 characters long)
@@ -69,3 +71,19 @@ The script prints out some data (number of nodes/edges before/after the removal 
 
 The script saves three `.gml` files: one for the reduced graph, one for the projection on ingredients, and one for the projection on the recipes. 
 Simply update the list of locations and run the script.
+
+### Nutrients Graphs
+The `nutrients_graph_processing.py` script processes the graph by 
+1. Using the recipes from the "Ingredients Graphs" section
+2. Only keeping five nutrients: Fats, Protein, Carbs, Sugars, Fiber
+3. Reweighing the edges to percentage weight of the five nutrients 
+4. Removing edges with low weight
+5. Creating a bipartite graph for the remaining nutrients and ingredients
+6. Creating the 1-mode projections onto the nutrients and ingredients
+
+The script prints out some data (number of nodes/edges before/after the removal of nodes).
+
+The script saves three `.gml` files: one for the reduced graph, one for the projection on nutrients, and one for the projection on the recipes. 
+Simply update the list of locations and run the script.
+
+## Analyzing the graphs

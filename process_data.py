@@ -127,7 +127,7 @@ def main():
     df = generate_normalized_nutri_info(df)
     # # save the normalized dataframe
     # print('Saving full edited dataframe... ')
-    # df.to_pickle('RDB_full_data_filtered' + '.pkl')
+    df.to_pickle('RDB_full_data_filtered' + '.pkl')
     # # df.to_csv('RDB_full_data_filtered' + '.csv')
     # print('Done!')
 

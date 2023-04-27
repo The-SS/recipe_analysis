@@ -137,15 +137,18 @@ def main():
                'French', 'Indian Subcontinent', 'Italian',
                'Mexican', 'South American', 'US']
     continents = ['Asian', 'European', 'Latin American', 'North American']
+    world = ['RDB_full_data_filtered']
 
     build_graph_for_list(countries, 'country_data')
     build_graph_for_list(regions, 'region_data')
     build_graph_for_list(continents, 'continent_data')
+    build_graph_for_list(world, '')
 
     # # uncomment to print out information about the recipe-ingredients and recipe-nutrients graphs
     # print_recipe_ing_nutri_nums(countries, 'country_data')
     # print_recipe_ing_nutri_nums(regions, 'region_data')
     # print_recipe_ing_nutri_nums(continents, 'continent_data')
+    # print_recipe_ing_nutri_nums(world, '')
 
 
 if __name__ == "__main__":
