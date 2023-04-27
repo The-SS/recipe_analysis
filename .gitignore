@@ -9,3 +9,4 @@ deprecated/*
 *.zip
 test.py
 figures/*
+*.txt

@@ -87,13 +87,17 @@ def project_on_recipes(G):
 # ####################### #
 # Load and Save functions #
 # ####################### #
-def load_graph(loc, loc_type, reduced=False):
+def load_graph(loc, loc_type, reduced=False, projI=False, projR=False):
     """
-    Loads a single graph. Supports normal graph and reduced versions
+    Loads a single graph. Supports normal graph and reduced versions (including projected)
     """
     loc += '_ingredients'
     if reduced:
         loc += '_reduced'
+        if projI:
+            loc += '_ingProjI'
+        elif projR:
+            loc += '_ingProjR'
     filename = os.path.join(loc_type, loc)
     return nx.read_gml(filename + '.gml')
 
@@ -148,6 +152,9 @@ def load_reduced_project_save(loc, loc_type, save=True):
 # MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN #
 # #################################################################################################################### #
 def main():
+    gen_country = False
+    gen_region = False
+    gen_continent = False
     countries = ['Argentine', 'Australian', 'Canadian', 'Chinese',
                  'English', 'French', 'German', 'Greek',
                  'Indian', 'Irish', 'Italian',
@@ -157,31 +164,37 @@ def main():
                'Mexican', 'South American', 'US']
     continents = ['Asian', 'European', 'Latin American', 'North American']
 
-    for loc in tqdm(countries, total=len(countries), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
-        if loc in ['Italian', 'Mexican']:
-            dmin_r, dmin_i = 5, 25
-        else:
-            dmin_r, dmin_i = 5, 3
-        load_reduce_save(loc, 'country_data', dmin_r, dmin_i, verbose=True, save=True)
-    for loc in tqdm(regions, total=len(regions), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
-        if loc in ['Italian', 'Mexican']:
-            dmin_r, dmin_i = 5, 40
-        else:
-            dmin_r, dmin_i = 5, 7
-        load_reduce_save(loc, 'region_data', dmin_r, dmin_i, verbose=True, save=True)
-    for loc in tqdm(continents, total=len(continents), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
-        if loc == 'North American':
-            dmin_r, dmin_i = 10, 40
-        else:
-            dmin_r, dmin_i = 10, 70
-        load_reduce_save(loc, 'continent_data', dmin_r, dmin_i, verbose=True, save=True)
+    if gen_country:
+        for loc in tqdm(countries, total=len(countries), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+            if loc in ['Italian', 'Mexican']:
+                dmin_r, dmin_i = 5, 25
+            else:
+                dmin_r, dmin_i = 5, 3
+            load_reduce_save(loc, 'country_data', dmin_r, dmin_i, verbose=True, save=True)
+    if gen_region:
+        for loc in tqdm(regions, total=len(regions), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+            if loc in ['Italian', 'Mexican']:
+                dmin_r, dmin_i = 5, 40
+            else:
+                dmin_r, dmin_i = 5, 7
+            load_reduce_save(loc, 'region_data', dmin_r, dmin_i, verbose=True, save=True)
+    if gen_continent:
+        for loc in tqdm(continents, total=len(continents), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+            if loc == 'North American':
+                dmin_r, dmin_i = 10, 40
+            else:
+                dmin_r, dmin_i = 10, 70
+            load_reduce_save(loc, 'continent_data', dmin_r, dmin_i, verbose=True, save=True)
 
-    for loc in tqdm(countries, total=len(countries), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
-        load_reduced_project_save(loc, 'country_data', save=True)
-    for loc in tqdm(regions, total=len(regions), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
-        load_reduced_project_save(loc, 'region_data', save=True)
-    for loc in tqdm(continents, total=len(continents), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
-        load_reduced_project_save(loc, 'continent_data', save=True)
+    if gen_country:
+        for loc in tqdm(countries, total=len(countries), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+            load_reduced_project_save(loc, 'country_data', save=True)
+    if gen_region:
+        for loc in tqdm(regions, total=len(regions), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+            load_reduced_project_save(loc, 'region_data', save=True)
+    if gen_continent:
+        for loc in tqdm(continents, total=len(continents), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+            load_reduced_project_save(loc, 'continent_data', save=True)
 
 
 if __name__ == "__main__":
