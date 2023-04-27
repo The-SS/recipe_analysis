@@ -136,8 +136,8 @@ def main():
     plt_location_recipe_count(df, 'continent')
 
     # # generate and save dataframes per country
-    # country_dfs = generate_location_dfs(df, min_recip=2500, location_type='country')
-    # save_location_dfs(country_dfs, path='country_data', save_type='pkl')
+    country_dfs = generate_location_dfs(df, min_recip=2500, location_type='country')
+    save_location_dfs(country_dfs, path='country_data', save_type='pkl')
 
     # generate and save dataframes per region
     region_dfs = generate_location_dfs(df, min_recip=5000, location_type='region')
