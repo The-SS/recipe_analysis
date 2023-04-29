@@ -1,4 +1,4 @@
-from colorama import init, Fore, Back, Style
+from colorama import Fore, Style
 
 
 def print_colored(msg, color=''):
@@ -16,3 +16,4 @@ def print_colored(msg, color=''):
         print(Fore.CYAN + msg + Style.RESET_ALL)
     else:
         print(Style.RESET_ALL + msg)
+

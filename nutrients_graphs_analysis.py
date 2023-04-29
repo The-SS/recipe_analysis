@@ -6,7 +6,7 @@ from tqdm import tqdm
 import os
 from nutrients_graph_processing import load_nutri_graph
 from printing_functions import print_colored
-from plotly_plot_functions import radial_graph_plot, matrix_plot
+from plotting_functions import radial_graph_plot, matrix_plot
 from itertools import combinations
 from graph_processing_funtions import find_degree_one_nodes
 

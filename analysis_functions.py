@@ -7,6 +7,9 @@ import os
 
 
 def diameter(G, weighted=False):
+    """
+    Finds the diameter of a networkx graph
+    """
     if weighted:
         return nx.diameter(G, weight='weight')
     else:
@@ -103,14 +106,49 @@ def detect_comm_write_to_file(G_reduced, G_wc, wmin, cmin, loc, loc_type):
     return cset
 
 
-# ###################### #
-# Analysis Plotting Fxns #
-# ###################### #
+# ############################### #
+# Analysis Plotting/Printing Fxns #
+# ############################### #
 def plot_cset_hist(cset):
     comm_sizes = [len(comm) for comm in cset]
     plt.hist(comm_sizes, 20)
     plt.xlabel('community sizes')
     plt.show()
+
+
+def print_top_k(G_reduced, v, k=5, verbose=True):
+    """
+    G_reduced: networkx graph that contains recipes with titles
+    v: dictionary of node labels and some associated value (e.g. centrality) to sort the nodes
+    k: number of nodes with the highest values in v to print
+    """
+    result = []
+    top_k_nodes = [key for key, value in sorted(v.items(), key=lambda x: x[1], reverse=True)[:k]]
+    if verbose:
+        print(f"The top {k} nodes with the highest degree are: {top_k_nodes}")
+    result.append("The top " + str(k) + " nodes with the highest degree are: ")
+    for node in top_k_nodes:
+        if verbose:
+            print(node, ' corresponds to: ', G_reduced.nodes[node]['title'])
+        result.append(str(node) + ' corresponds to: ' + G_reduced.nodes[node]['title'])
+    return result
+
+
+def plot_degree_dist(G, show=True, save=False, save_name=''):
+    ddist = degree_distribution(G, normalize=False)
+    cdist = cumulative_degree_distribution(G)
+    k = np.arange(len(ddist))
+
+    plt.figure(figsize=(8, 12))
+    plt.subplot(211)
+    plt.bar(k, ddist, width=0.8, bottom=0, color='b')
+
+    plt.subplot(212)
+    plt.loglog(k, cdist)
+    plt.grid(True)
+    if show:
+        plt.show()
+
 
 
 
