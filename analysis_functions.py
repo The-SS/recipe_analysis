@@ -94,9 +94,9 @@ def G_wc(G, wmin, cmin):
     return G_wc
 
 
-def detect_comm_write_to_file(G_reduced, G_wc, wmin, cmin, loc, loc_type):
+def detect_comm_write_to_file(G_reduced, G_wc, wmin, cmin, loc, loc_type, name=''):
     cset = list(nx_comm.label_propagation_communities(G_wc))
-    comms_file = os.path.join(loc_type, loc + '_ingredients_communities_w' + str(wmin) + '_c' + str(cmin) + '.txt')
+    comms_file = os.path.join(loc_type, loc + '_ingredients_communities_w' + str(wmin) + '_c' + str(cmin) + '_' + name + '.txt')
     with open(comms_file, 'w') as fout:
         for itr, comm in enumerate(cset):
             comm_titles = ['`' + G_reduced.nodes[c]['title'] + '`' for c in comm]
@@ -109,11 +109,14 @@ def detect_comm_write_to_file(G_reduced, G_wc, wmin, cmin, loc, loc_type):
 # ############################### #
 # Analysis Plotting/Printing Fxns #
 # ############################### #
-def plot_cset_hist(cset):
+def plot_cset_hist(cset, show, save, filename):
     comm_sizes = [len(comm) for comm in cset]
     plt.hist(comm_sizes, 20)
     plt.xlabel('community sizes')
-    plt.show()
+    if save:
+        plt.savefig(filename)
+    if show:
+        plt.show()
 
 
 def print_top_k(G_reduced, v, k=5, verbose=True):
@@ -124,13 +127,14 @@ def print_top_k(G_reduced, v, k=5, verbose=True):
     """
     result = []
     top_k_nodes = [key for key, value in sorted(v.items(), key=lambda x: x[1], reverse=True)[:k]]
+    top_k_values = [value for key, value in sorted(v.items(), key=lambda x: x[1], reverse=True)[:k]]
     if verbose:
         print(f"The top {k} nodes with the highest degree are: {top_k_nodes}")
     result.append("The top " + str(k) + " nodes with the highest degree are: ")
-    for node in top_k_nodes:
+    for i, node in enumerate(top_k_nodes):
         if verbose:
             print(node, ' corresponds to: ', G_reduced.nodes[node]['title'])
-        result.append(str(node) + ' corresponds to: ' + G_reduced.nodes[node]['title'])
+        result.append(str(node) + ': ' + G_reduced.nodes[node]['title'] + ' (' + str(top_k_values[i]) + ')')
     return result
 
 
@@ -146,8 +150,28 @@ def plot_degree_dist(G, show=True, save=False, save_name=''):
     plt.subplot(212)
     plt.loglog(k, cdist)
     plt.grid(True)
+    if save:
+        plt.savefig(save_name)
     if show:
         plt.show()
+
+# def plot_something(show=True, save=False, save_name=''):
+#     x = [1,2,3]
+#     y = [2,1,3]
+#     plt.figure(figsize=(8, 12))
+#     plt.subplot(211)
+#     plt.bar(x, y, width=0.8, bottom=0, color='b')
+#
+#     plt.subplot(212)
+#     plt.loglog(x, y)
+#     plt.grid(True)
+#     if save:
+#         plt.savefig(save_name)
+#     if show:
+#         plt.show()
+#
+# plot_something(False, True, 'test.png')
+
 
 
 
