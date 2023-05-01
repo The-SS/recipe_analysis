@@ -87,17 +87,19 @@ def get_recipes_that_connect_nutrients(loc, loc_type):
 
     recipe_pairs_by_nutrients = {}
     for u, v in combinations(nutrients, 2):
-        recipe_pairs_by_nutrients[(G.nodes[u]['title'], G.nodes[v]['title'])] = []
+        recipe_pairs_by_nutrients[(G.nodes[u]['title'], G.nodes[v]['title'])] = set()
+    for u in nutrients:
+        recipe_pairs_by_nutrients[(G.nodes[u]['title'], G.nodes[u]['title'])] = set()
     for recipe in recipes:
         connects_to_2_nutrients = False
         for u, v in combinations(nutrients, 2):
             if G.has_edge(recipe, u) and G.has_edge(recipe, v):
-                recipe_pairs_by_nutrients[(G.nodes[u]['title'], G.nodes[v]['title'])].append(G.nodes[recipe]['title'])
+                recipe_pairs_by_nutrients[(G.nodes[u]['title'], G.nodes[v]['title'])].add(G.nodes[recipe]['title'])
                 connects_to_2_nutrients = True
         if not connects_to_2_nutrients:
             for u in nutrients:
                 if G.has_edge(recipe, u):
-                    recipe_pairs_by_nutrients[(G.nodes[u]['title'], G.nodes[u]['title'])].append(
+                    recipe_pairs_by_nutrients[(G.nodes[u]['title'], G.nodes[u]['title'])].add(
                         G.nodes[recipe]['title'])
 
     save_file = os.path.join('figures', 'text_res', loc_type + "_" + loc + '_recipes_connecting_nutrients.txt')
@@ -114,7 +116,7 @@ def get_recipes_that_connect_nutrients(loc, loc_type):
     for k, v in recipe_pairs_by_nutrients.items():
         recipe_count_normalized[k] = len(v) / vm
 
-    return recipe_pairs_by_nutrients
+    return recipe_pairs_by_nutrients, recipe_count_normalized
 
 
 # #################################################################################################################### #
