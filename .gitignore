@@ -10,3 +10,4 @@ deprecated/*
 test.py
 figures/*
 *.txt
+*.png

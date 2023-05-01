@@ -117,6 +117,8 @@ def plot_cset_hist(cset, show, save, filename):
         plt.savefig(filename)
     if show:
         plt.show()
+    else:
+        plt.close()
 
 
 def print_top_k(G_reduced, v, k=5, verbose=True):
@@ -154,26 +156,5 @@ def plot_degree_dist(G, show=True, save=False, save_name=''):
         plt.savefig(save_name)
     if show:
         plt.show()
-
-# def plot_something(show=True, save=False, save_name=''):
-#     x = [1,2,3]
-#     y = [2,1,3]
-#     plt.figure(figsize=(8, 12))
-#     plt.subplot(211)
-#     plt.bar(x, y, width=0.8, bottom=0, color='b')
-#
-#     plt.subplot(212)
-#     plt.loglog(x, y)
-#     plt.grid(True)
-#     if save:
-#         plt.savefig(save_name)
-#     if show:
-#         plt.show()
-#
-# plot_something(False, True, 'test.png')
-
-
-
-
-
-
+    else:
+        plt.close()

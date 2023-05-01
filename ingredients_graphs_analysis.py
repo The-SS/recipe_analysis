@@ -116,7 +116,6 @@ def main():
                  'English', 'French', 'German', 'Greek',
                  'Indian', 'Irish', 'Italian',
                  'Mexican', 'Nigerian', 'Thai', 'US']
-    # countries = ['Argentine', 'Thai', 'Nigerian']
     regions = ['Australian', 'Canadian', 'Chinese and Mongolian',
                'French', 'Indian Subcontinent', 'Italian',
                'Mexican', 'South American', 'US']

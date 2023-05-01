@@ -11,10 +11,6 @@ from itertools import combinations
 from graph_processing_funtions import find_degree_one_nodes
 
 
-# ############################# #
-# Functions that do many things #
-# ############################# #
-
 def categories(main_nutrients):
     combs_list = list(combinations(main_nutrients, 2))
     combs = combs_list[:]
@@ -35,9 +31,9 @@ def get_loc_weights(loc, loc_type, combs_list, nutrients):
 
     vals = []
     for comb in combs_list:
-        try:
+        if G.has_edge(node_title_dict[comb[0]], node_title_dict[comb[1]]):
             v = G[node_title_dict[comb[0]]][node_title_dict[comb[1]]]['weight']
-        except:
+        else:
             v = 0
         vals.append(v)
 
@@ -73,23 +69,61 @@ def plot_nutrients_analysis(loc_list, loc_type, individual_plots, combs, combs_l
         vals, self_vals = get_loc_weights(loc, loc_type + '_data', combs_list, main_nutrients)
         vals_dic[loc] = vals
         if individual_plots:
-            filename_r = 'figures/' + loc_type + '_' + loc + '_nutrients_radar.png'
-            filename_m = 'figures/' + loc_type + '_' + loc + '_nutrients_matrix.png'
+            filename_r = 'figures/radar/' + loc_type + '_' + loc + '_nutrients_radar.png'
+            filename_m = 'figures/matrix/' + loc_type + '_' + loc + '_nutrients_matrix.png'
             title = 'Nutrients for ' + loc_type + ' ' + loc + ' data'
             radial_graph_plot({loc: vals}, combs, title, filename_r, save_plots, show_plots)
             matrix_plot(vals, self_vals, main_nutrients_labels, title, filename_m, save_plots, show_plots)
-    filename = 'figures/' + loc_type + '_nutrients_radar.png'
+    filename = 'figures/radar/' + loc_type + '_nutrients_radar.png'
     title = 'Nutrients for ' + loc_type + ' data'
     radial_graph_plot(vals_dic, combs, title, filename, save_plots, show_plots)
+
+
+def get_recipes_that_connect_nutrients(loc, loc_type):
+    G = load_nutri_graph(loc, loc_type + '_data', reduced=True, projN=False, projR=False)
+
+    recipes = [node for node in G.nodes if 'url' in G.nodes[node]]
+    nutrients = [node for node in G.nodes if 'url' not in G.nodes[node]]
+
+    recipe_pairs_by_nutrients = {}
+    for u, v in combinations(nutrients, 2):
+        recipe_pairs_by_nutrients[(G.nodes[u]['title'], G.nodes[v]['title'])] = []
+    for recipe in recipes:
+        connects_to_2_nutrients = False
+        for u, v in combinations(nutrients, 2):
+            if G.has_edge(recipe, u) and G.has_edge(recipe, v):
+                recipe_pairs_by_nutrients[(G.nodes[u]['title'], G.nodes[v]['title'])].append(G.nodes[recipe]['title'])
+                connects_to_2_nutrients = True
+        if not connects_to_2_nutrients:
+            for u in nutrients:
+                if G.has_edge(recipe, u):
+                    recipe_pairs_by_nutrients[(G.nodes[u]['title'], G.nodes[u]['title'])].append(
+                        G.nodes[recipe]['title'])
+
+    save_file = os.path.join('figures', 'text_res', loc_type + "_" + loc + '_recipes_connecting_nutrients.txt')
+    vm = 0
+    with open(save_file, 'w') as fout:
+        for keys, values in recipe_pairs_by_nutrients.items():
+            vm = max(len(values), vm)
+            data = ['###(' + keys[0] + ', ' + keys[1] + ')###: ']
+            data.extend(['`' + val + '`' for val in values])
+            fout.write(' '.join(data))
+            fout.write('\n')
+
+    recipe_count_normalized = {}
+    for k, v in recipe_pairs_by_nutrients.items():
+        recipe_count_normalized[k] = len(v) / vm
+
+    return recipe_pairs_by_nutrients
 
 
 # #################################################################################################################### #
 # MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN #
 # #################################################################################################################### #
 def main():
-    analyze_country = True
-    analyze_region = True
-    analyze_continent = True
+    analyze_country = False
+    analyze_region = False
+    analyze_continent = False
     individual_plots = True
     save_plots = True
     show_plots = False
@@ -120,6 +154,10 @@ def main():
     if analyze_continent:
         plot_nutrients_analysis(continents, 'continent', individual_plots, combs, combs_list,
                                 main_nutrients, main_nutrients_labels, save_plots, show_plots)
+
+    for loc in tqdm(continents, total=len(continents), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
+        recipe_pairs_by_nutrients = get_recipes_that_connect_nutrients(loc, 'continent')
+
 
 
 if __name__ == "__main__":

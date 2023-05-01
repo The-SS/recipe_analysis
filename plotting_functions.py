@@ -1,6 +1,7 @@
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
+import matplotlib.pyplot as plt
 
 
 def radial_graph_plot(vals_dict, theta, title, filename, save=True, show=False):
@@ -58,6 +59,34 @@ def matrix_plot(vals, diag_vals, labels, title, filename, save=True, show=False)
         fig.write_image(filename)
     if show:
         fig.show()
+
+
+def diameters_plot(file_path, title, show_plot=False, save_plot=False):
+    # Read data from file
+    locations = []
+    values = []
+    with open(file_path, 'r') as f:
+        for line in f:
+            location, value = line.split(': ')
+            locations.append(location)
+            values.append(float(value))
+
+    # Create plot
+    plt.bar(locations, values)
+    plt.xlabel('Location')
+    plt.ylabel('Value')
+    plt.title(title)
+    plt.yticks(fontsize=14)
+    plt.xticks(rotation=90, fontsize=14)
+
+    # Save and/or show the plot
+    if save_plot:
+        save_path = file_path.replace('.txt', '.png')
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    if show_plot:
+        plt.show()
+    else:
+        plt.close()
 
 
 # ########## #
