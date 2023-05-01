@@ -92,6 +92,7 @@ Analyzes the ingredients graphs' 1-mode projection on the ingredients generating
 - graph diameters
 - degree centrality
 - betweenness centrality
+- degree distribution
 
 ### `ingredients_graphs_analysis_result_plots_and_tabels`
 Plots graphs and saves tables for results from `ingredients_graphs_analysis.py`
