@@ -87,3 +87,18 @@ The script saves three `.gml` files: one for the reduced graph, one for the proj
 Simply update the list of locations and run the script.
 
 ## Analyzing the graphs
+### `ingredients_graphs_analysis`
+Analyzes the ingredients graphs' 1-mode projection on the ingredients generating details about
+- graph diameters
+- degree centrality
+- betweenness centrality
+
+### `ingredients_graphs_analysis_result_plots_and_tabels`
+Plots graphs and saves tables for results from `ingredients_graphs_analysis.py`
+
+### `nutrients_graphs_analysis`
+Analyzes the nutrients graphs' 1-mode projection on the nutrients generating details about
+- recipes that have only one main nutrient
+- recipes that connect two nutrients
+- radar and matrix graphs of the nutrition content of each graph (normalized) 
+
