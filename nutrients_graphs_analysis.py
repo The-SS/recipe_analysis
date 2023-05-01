@@ -1,3 +1,5 @@
+import pickle
+
 import networkx as nx
 import numpy as np
 from copy import deepcopy
@@ -66,6 +68,7 @@ def plot_nutrients_analysis(loc_list, loc_type, individual_plots, combs, combs_l
     for loc in tqdm(loc_list, total=len(loc_list), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
         if verbose:
             print_colored(loc, 'y')
+        get_recipes_that_connect_nutrients(loc, loc_type)
         vals, self_vals = get_loc_weights(loc, loc_type + '_data', combs_list, main_nutrients)
         vals_dic[loc] = vals
         if individual_plots:
@@ -112,9 +115,20 @@ def get_recipes_that_connect_nutrients(loc, loc_type):
             fout.write(' '.join(data))
             fout.write('\n')
 
+    save_file = os.path.join('figures', 'text_res', 'pkl', loc_type + "_" + loc + '_recipes_connecting_nutrients.pkl')
+    with open(save_file, 'wb') as fout:
+        pickle.dump(recipe_pairs_by_nutrients, fout)
+
     recipe_count_normalized = {}
     for k, v in recipe_pairs_by_nutrients.items():
         recipe_count_normalized[k] = len(v) / vm
+
+    save_file = os.path.join('figures', 'text_res', 'summaries', loc_type + "_" + loc + '_recipes_connecting_nutrients_summary.txt')
+    with open(save_file, 'w') as fout:
+        for key, value in recipe_count_normalized.items():
+            data = '(' + key[0] + ', ' + key[1] + '): ' + str(value)
+            fout.write(data)
+            fout.write('\n')
 
     return recipe_pairs_by_nutrients, recipe_count_normalized
 
@@ -123,9 +137,9 @@ def get_recipes_that_connect_nutrients(loc, loc_type):
 # MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN - MAIN #
 # #################################################################################################################### #
 def main():
-    analyze_country = False
-    analyze_region = False
-    analyze_continent = False
+    analyze_country = True
+    analyze_region = True
+    analyze_continent = True
     individual_plots = True
     save_plots = True
     show_plots = False
@@ -138,9 +152,10 @@ def main():
                'Mexican', 'South American', 'US']
     continents = ['Asian', 'European', 'Latin American', 'North American']
 
+    # MAKE SURE THESE MATCH !!!
     main_nutrients = ['Total fats (g)', 'Protein (g)', 'Carbohydrates (g)',
                       'Sugars, total (g)', 'Fiber, total dietary (g)']
-    main_nutrients_labels = ['Proteins', 'Carbs', 'Fats', 'Fiber', 'Sugar']
+    main_nutrients_labels = ['Fats', 'Proteins', 'Carbs', 'Sugars', 'Fiber']
 
     _, combs_list = categories(main_nutrients)
     combs, _ = categories(main_nutrients_labels)
@@ -156,10 +171,6 @@ def main():
     if analyze_continent:
         plot_nutrients_analysis(continents, 'continent', individual_plots, combs, combs_list,
                                 main_nutrients, main_nutrients_labels, save_plots, show_plots)
-
-    for loc in tqdm(continents, total=len(continents), bar_format='{l_bar}{bar:30}{r_bar}', colour='white'):
-        recipe_pairs_by_nutrients = get_recipes_that_connect_nutrients(loc, 'continent')
-
 
 
 if __name__ == "__main__":
