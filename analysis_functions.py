@@ -42,11 +42,11 @@ def degree_distribution(G, normalize=True):
     """
     deg_sequence = degree_sequence(G)
     max_degree = max(deg_sequence)
-    ddist = np.zeros((max_degree+1,))
+    ddist = np.zeros((max_degree + 1,))
     for d in deg_sequence:
         ddist[d] += 1
     if normalize:
-        ddist = ddist/float(G.number_of_nodes())
+        ddist = ddist / float(G.number_of_nodes())
     return ddist
 
 
@@ -96,14 +96,55 @@ def G_wc(G, wmin, cmin):
 
 def detect_comm_write_to_file(G_reduced, G_wc, wmin, cmin, loc, loc_type, name=''):
     cset = list(nx_comm.label_propagation_communities(G_wc))
-    comms_file = os.path.join(loc_type, loc + '_ingredients_communities_w' + str(wmin) + '_c' + str(cmin) + '_' + name + '.txt')
+    comms_file = os.path.join(loc_type,
+                              loc + '_ingredients_communities_w' + str(wmin) + '_c' + str(cmin) + '_' + name + '.txt')
     with open(comms_file, 'w') as fout:
         for itr, comm in enumerate(cset):
             comm_titles = ['`' + G_reduced.nodes[c]['title'] + '`' for c in comm]
             fout.write(' '.join(comm_titles))
-            if itr < len(cset)-1:
+            if itr < len(cset) - 1:
                 fout.write('\n')
     return cset
+
+
+def modularity(G, c):
+    d = dict()
+    for k, v in enumerate(c):
+        for n in v:
+            d[n] = k
+    L = 0
+    for u, v, data in G.edges.data():
+        L += data['weight']
+    Q, Qmax = 0, 1
+    for u in G.nodes():
+        for v in G.nodes():
+            if d[u] == d[v]:
+                Auv = 0
+                if G.has_edge(v, u):
+                    Auv = G[v][u]['weight']
+                Q += (Auv - G.in_degree(u, weight='weight') * G.out_degree(v, weight='weight') / L) / L
+                Qmax -= (G.in_degree(u, weight='weight') * G.out_degree(v, weight='weight') / L) / L
+    return Q, Qmax
+
+
+def scalar_assortativity(G, d):
+    x = np.zeros(G.number_of_nodes())
+    for i, n in enumerate(G.nodes()):
+        x[i] = d[n]
+
+    A = np.array(nx.adjacency_matrix(G).todense().T)
+    M = 2 * A.sum().sum()
+    ki = A.sum(axis=1)  # row sum is in-degree
+    ko = A.sum(axis=0)  # column sum is out-degree
+    mu = (np.dot(ki, x) + np.dot(ko, x)) / M
+
+    R, Rmax = 0, 0
+    for i in range(G.number_of_nodes()):
+        for j in range(G.number_of_nodes()):
+            R += (A[i, j] * (x[i] - mu) * (x[j] - mu)) / M
+            Rmax += (A[i, j] * (x[i] - mu) ** 2) / M
+
+    return R, Rmax
 
 
 # ############################### #
