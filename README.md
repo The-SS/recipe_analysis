@@ -103,3 +103,9 @@ Analyzes the nutrients graphs' 1-mode projection on the nutrients generating det
 - recipes that connect two nutrients
 - radar and matrix graphs of the nutrition content of each graph (normalized) 
 
+### `assortativity`
+Looks at the assortativity within the 1-mode projection of the ingredients graphs on the ingredients.
+Each ingredient is labeled its dominant macro-nutrient (fat, protein, or carb).
+Ingredients that cannot be labeled by one of these three are removed from the graph.
+Networkx modularity is used to compute the modularity with respect to these three classes.
+We also perform a random sampling of the nodes and compute the modularity of the induced subgraph.
