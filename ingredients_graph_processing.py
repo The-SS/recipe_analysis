@@ -63,7 +63,7 @@ def remove_recipes_and_ingredients_with_small_degree(G, dmin_r=1, dmin_i=1, verb
     return G
 
 
-def project_on_recipes(G):
+def project_on_recipes(G, projR=True, projI=True):
     recipes = [node for node in G.nodes if 'url' in G.nodes[node]]
     ingredients = [node for node in G.nodes if 'url' not in G.nodes[node]]
     edges = G.edges()
@@ -75,11 +75,17 @@ def project_on_recipes(G):
     BG.add_edges_from(edges)  # add edges between recipes and ingredients
 
     # Perform one-mode projection onto recipe nodes
-    recipe_nodes = {n for n, d in BG.nodes(data=True) if d["bipartite"] == 0}  # identify recipe nodes
-    recipe_projection = nx.bipartite.weighted_projected_graph(BG, recipe_nodes)
+    if projR:
+        recipe_nodes = {n for n, d in BG.nodes(data=True) if d["bipartite"] == 0}  # identify recipe nodes
+        recipe_projection = nx.bipartite.weighted_projected_graph(BG, recipe_nodes)
+    else:
+        recipe_projection = None
 
-    ingredients_nodes = {n for n, d in BG.nodes(data=True) if d["bipartite"] == 1}  # identify recipe nodes
-    ingredients_projection = nx.bipartite.weighted_projected_graph(BG, ingredients_nodes)
+    if projI:
+        ingredients_nodes = {n for n, d in BG.nodes(data=True) if d["bipartite"] == 1}  # identify recipe nodes
+        ingredients_projection = nx.bipartite.weighted_projected_graph(BG, ingredients_nodes)
+    else:
+        ingredients_projection = None
 
     return recipe_projection, ingredients_projection
 

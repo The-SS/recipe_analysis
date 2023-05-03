@@ -71,7 +71,7 @@ def G_wc(G, wmin, cmin):
     # remove edges will low weight
     uv_pairs = []
     for u, v, d in G_wc.edges(data=True):
-        if hasattr(d, 'weight') and d['weight'] < wmin:
+        if 'weight' in d.keys() and d['weight'] < wmin:
             uv_pairs.append([u, v])
     for uv in uv_pairs:
         G_wc.remove_edge(uv[0], uv[1])
