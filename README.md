@@ -2,15 +2,19 @@
 
 These scripts require the following dependencies:
 - numpy
+- scipy
+- random
+- matplotlib
+- plotly
+- colorama
+- pickle
 - pandas
 - requests
-- bs4.
+- bs4
+- tqdm
+- networkx
 
 They have been tested with Python 3.7.
-A conda environment can be created using:
-``` 
-conda create --name conda_env python=3.7 numpy pandas requests bs4
-```
 
 ## Data download
 https://cosylab.iiitd.edu.in/recipedb/ can be scraped using the `get_dataRDB.py` script.
@@ -43,11 +47,11 @@ The `process_data.py` script provides:
 2. some data processing and filtering for the data to build a graph.
 3. saving of data for specific locations with a large enough number of recipes.
 
-The full filtered data is saved to the same directory.
-The country data is saved to the `country_data` directory.
-The region data is saved to the `region_data` directory.
-The continent data is saved to the `continent_data` directory.
-The world data is saved to the root directory.
+The full filtered data gets saved to the same directory.
+The country data gets saved to the `country_data` directory.
+The region data gets saved to the `region_data` directory.
+The continent data gets saved to the `continent_data` directory.
+The world data gets saved to the root directory.
 The script can be executed without any modifications.
 
 ## Building the graphs
@@ -87,23 +91,23 @@ The script saves three `.gml` files: one for the reduced graph, one for the proj
 Simply update the list of locations and run the script.
 
 ## Analyzing the graphs
-### `ingredients_graphs_analysis`
+### `ingredients_graphs_analysis.py`
 Analyzes the ingredients graphs' 1-mode projection on the ingredients generating details about
 - graph diameters
 - degree centrality
 - betweenness centrality
 - degree distribution
 
-### `ingredients_graphs_analysis_result_plots_and_tabels`
+### `ingredients_graphs_analysis_result_plots_and_tabels.py`
 Plots graphs and saves tables for results from `ingredients_graphs_analysis.py`
 
-### `nutrients_graphs_analysis`
+### `nutrients_graphs_analysis.py`
 Analyzes the nutrients graphs' 1-mode projection on the nutrients generating details about
 - recipes that have only one main nutrient
 - recipes that connect two nutrients
 - radar and matrix graphs of the nutrition content of each graph (normalized) 
 
-### `assortativity`
+### `assortativity.py`
 Looks at the assortativity within the 1-mode projection of the ingredients graphs on the ingredients.
 Each ingredient is labeled its dominant macro-nutrient (fat, protein, or carb).
 Ingredients that cannot be labeled by one of these three are removed from the graph.
