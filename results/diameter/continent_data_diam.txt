@@ -1,0 +1,4 @@
+Asian: 4
+European: 4
+Latin American: 4
+North American: 4

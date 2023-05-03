@@ -1,0 +1,15 @@
+(Sugars, total (g), Total fats (g)): 0.07721459024159166
+(Sugars, total (g), Protein (g)): 0.14021790620558977
+(Sugars, total (g), Fiber, total dietary (g)): 0.007579346281383231
+(Sugars, total (g), Carbohydrates (g)): 0.2728564661297963
+(Total fats (g), Protein (g)): 0.9815253434391283
+(Total fats (g), Fiber, total dietary (g)): 0.0004737091425864519
+(Total fats (g), Carbohydrates (g)): 0.6224538133585978
+(Protein (g), Fiber, total dietary (g)): 0.013737565135007106
+(Protein (g), Carbohydrates (g)): 1.0
+(Fiber, total dietary (g), Carbohydrates (g)): 0.03268593083846518
+(Sugars, total (g), Sugars, total (g)): 0.0
+(Total fats (g), Total fats (g)): 0.026527711984841308
+(Protein (g), Protein (g)): 0.1369019422074846
+(Fiber, total dietary (g), Fiber, total dietary (g)): 0.0
+(Carbohydrates (g), Carbohydrates (g)): 0.049265750828991

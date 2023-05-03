@@ -1,0 +1,15 @@
+Argentine: 3
+Australian: 4
+Canadian: 3
+Chinese: 3
+English: 3
+French: 4
+German: 3
+Greek: 3
+Indian: 3
+Irish: 4
+Italian: 3
+Mexican: 3
+Nigerian: 3
+Thai: 3
+US: 4

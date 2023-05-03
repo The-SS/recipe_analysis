@@ -3,12 +3,9 @@ data_full/*
 data_pkl/*
 deprecated/*
 *.gml
-*.csv
 *.pkl
 .idea/*
 *.zip
 test.py
-figures/*
-*.txt
-*.png
 __pycache__/*
+RDB_full_data.csv

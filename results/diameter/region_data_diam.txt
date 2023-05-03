@@ -1,0 +1,9 @@
+Australian: 4
+Canadian: 4
+Chinese and Mongolian: 4
+French: 4
+Indian Subcontinent: 4
+Italian: 4
+Mexican: 4
+South American: 4
+US: 4
